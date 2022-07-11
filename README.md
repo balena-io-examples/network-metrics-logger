@@ -24,7 +24,7 @@ Environment variables you may configure are listed in the sections below. Variab
 
 ### METRICS_REQUEST
 
-The METRICS_REQUEST variable is defined by the [system-metrics block](https://github.com/balena-io-examples/system-metrics) to collect the network I/O data. By default the fleet collects metrics on **all** interfaces to help you get started, as you can see in the text below for the METRICS_REQUEST variable.
+The METRICS_REQUEST variable is defined by the [system-metrics block](https://github.com/balena-io-examples/system-metrics) to collect the network I/O data. By default the fleet collects metrics on **all** interfaces to help you get started, as you can see in the request text below.
 
 ```
 networkStats/(*), networkStats/iface, networkStats/rx_bytes, networkStats/tx_bytes
@@ -32,7 +32,7 @@ networkStats/(*), networkStats/iface, networkStats/rx_bytes, networkStats/tx_byt
 
 However, the network metrics logger container only reports data from the **first** interface in the list it receives. Often this interface is `lo`, the localhost interface, which probably is not what you want.
 
-So, update the METRICS_REQUEST variable with the single interface of interest. For example, if you are interested in interface `eth0`, update METRICS_REQUEST like below.
+So create/update a `METRICS_REQUEST` device variable with the single interface of interest. For example, if you are interested in interface `eth0`, set METRICS_REQUEST like below.
 
 ```
 networkStats/(eth0), networkStats/rx_bytes, networkStats/tx_bytes
