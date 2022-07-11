@@ -2,43 +2,43 @@
 
 *Log metrics on network I/O*
 
-This fleet logs network I/O metrics on a configurable interval. It generates minimal output to avoid creation of network I/O itself.
+This fleet logs network I/O metrics on a configurable interval from data provided by [System Metrics](https://github.com/balena-io-examples/system-metrics) block. The logger generates minimal output to avoid creation of more network I/O itself.
 
 ## Getting Started
 
-Simply click on the *Deploy with balena* button below to create a fleet from the docker-compose file in this repository.
+Simply click on the *Deploy with balena* button below to create a fleet from the [docker-compose](https://github.com/balena-io-examples/network-metrics-logger/blob/master/docker-compose.yml) file in this repository.
 
 [![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/balena-io-examples/network-metrics-logger)
 
-By default the fleet publishes bytes transmitted and received every five minutes on the first requested interface. You should see messages like below.
+By default the fleet publishes bytes transmitted and received every five minutes on the first interface received from the System Metrics block. You should see messages like below.
 
 ```
 11.07.22 12:54:36 (+0000)  network-metrics-logger  Received initial loggable message for interface lo; starting publish interval
 11.07.22 12:59:36 (+0000)  network-metrics-logger  elapsedRx: 40976, elapsedTx: 40976
 11.07.22 13:04:36 (+0000)  network-metrics-logger  elapsedRx: 42868, elapsedTx: 42868
 ```
-Notice the first message specifies the name of the interface, in this case 'lo'. See METRICS_REQUEST configuration below to specify a different interface.
+Notice the first message includes the name of the interface, in this case the loopback interface `lo`. See METRICS_REQUEST configuration below to specify a different interface.
 
 ## Configuration
-Environment variables you may configure are listed in the sections below. Variables may be defined as balena **Fleet** variables or **Device** variables.
+Environment variables you may configure are listed in the sections below.
 
 ### METRICS_REQUEST
 
-The METRICS_REQUEST variable is defined by the [system-metrics block](https://github.com/balena-io-examples/system-metrics) to collect the network I/O data. By default the fleet collects metrics on **all** interfaces to help you get started, as you can see in the request text below.
+The METRICS_REQUEST variable is [defined](https://github.com/balena-io-examples/system-metrics#metrics_request) by the System Metrics block to collect network I/O readings. The fleet collects metrics on **all** interfaces by default to help you get started, as you can see in the first term of the request text below.
 
 ```
 networkStats/(*), networkStats/iface, networkStats/rx_bytes, networkStats/tx_bytes
 ```
 
-However, the network metrics logger container only reports data from the **first** interface in the list it receives. Often this interface is `lo`, the localhost interface, which probably is not what you want.
+However, the network metrics logger container only reports data from the **first** interface it receives from System Metrics. Often this interface is `lo`, the loopback interface, which probably is not what you want.
 
-So create/update a `METRICS_REQUEST` device variable with the single interface of interest. For example, if you are interested in interface `eth0`, set METRICS_REQUEST like below.
+So create/update a `METRICS_REQUEST` environment variable with the single interface of interest. For example, if you are interested in interface `eth0`, set METRICS_REQUEST like below.
 
 ```
 networkStats/(eth0), networkStats/rx_bytes, networkStats/tx_bytes
 ```
 
-If you don't know the name of the interface, use Network Manager to find it. In the example below, `eth0` is the DEVICE column value for the wired Ethernet interface.
+If you don't know the name of the interface, use Network Manager to find it. In the example below, `eth0` is provided in the DEVICE column value for the wired Ethernet interface.
 
 ```
 $ nmcli d
