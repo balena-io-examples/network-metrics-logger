@@ -8,7 +8,7 @@ This fleet logs network I/O metrics on a configurable interval. It generates min
 
 Simply click on the *Deploy with balena* button below to create a fleet from the docker-compose file in this repository.
 
-<deploy-with-balena repourl="https://github.com/balena-io-examples/network-metrics-logger"></deploy-with-balena>
+[![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/balena-io-examples/network-metrics-logger)
 
 By default the fleet publishes bytes transmitted and received every five minutes on the first requested interface. You should see messages like below.
 
