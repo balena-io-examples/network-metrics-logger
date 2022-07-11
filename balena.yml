@@ -9,7 +9,8 @@ assets:
       url: 'https://github.com/balena-io-examples/network-metrics-logger'
 data:
   applicationEnvironmentVariables:
-    - METRICS_REQUEST: "networkStats/(*), networkStats/iface, networkStats/rx_bytes, networkStats/tx_bytes"
+    - METRICS_REQUEST: "networkStats/(*), networkStats/iface, networkStats/rx_bytes,
+        networkStats/tx_bytes"
     - PUBLISH_INTERVAL_SEC: 300
   defaultDeviceType: raspberrypi4-64
   supportedDeviceTypes:
