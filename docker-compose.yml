@@ -1,0 +1,27 @@
+version: '2'
+services:
+  network-metrics-logger:
+    build: .
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      MQTT_ADDRESS: '127.0.0.1'
+    depends_on:
+        - "mqtt"
+  system-metrics:
+    build: ./system-metrics
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+    environment:
+      MQTT_ADDRESS: '127.0.0.1'
+      METRICS_REQUEST: 'networkStats/(*), networkStats/iface, networkStats/rx_bytes, networkStats/tx_bytes'
+      READING_INTERVAL_MS: '10000'
+    depends_on:
+        - "mqtt"
+  mqtt:
+    image: eclipse-mosquitto:1.6.15
+    restart: unless-stopped
+    # need host exposure for sensor service, but limit to just this host for security
+    ports:
+      - 127.0.0.1:1883:1883
