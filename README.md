@@ -57,4 +57,4 @@ lo               loopback  unmanaged    --
 
 ### PUBLISH_INTERVAL_SEC
 
-Interval between publishing metrics, in seconds. Defaults to `300` (5 minutes).
+Interval between publishing metrics, in seconds. Allows accumulating byte totals for a period longer than the interval between incoming metrics messages.  Defaults to `0`, which publishes totals as messages received. So, if metrics messages are received every 10 seconds and PUBLISH_INTERVAL_SEC is 30, accumulates byte totals over 3 incoming messages before publishing.

@@ -42,7 +42,9 @@ async function connectLocal() {
 }
 
 /**
- * Runs the logger. On each publish interval, logs elapsed RX and TX byte totals.
+ * Runs the logger and listens for metrics messages. Logs elapsed RX and TX byte
+ * totals on each publish interval. If publish interval is 0, logs as metrics
+ * messages are received.
  */
 async function start() {
     let startRx = 0, startTx = 0
@@ -51,8 +53,8 @@ async function start() {
         await connectLocal()
 
         let pubInterval = process.env.PUBLISH_INTERVAL_SEC
-        if (!pubInterval) {
-            pubInterval = 300
+        if (typeof pubInterval === 'undefined') {
+            pubInterval = 0
         }
         console.log(`Publish interval: ${pubInterval} sec`)
         pubInterval *= 1000
@@ -67,15 +69,21 @@ async function start() {
                 if (startRx == 0) {
                     startRx = lastRx
                     startTx = lastTx
-                    const iface = stats.iface ? stats.iface : "(not provided)"
-                    console.log(`Received initial loggable message for interface ${iface}; starting publish interval`)
+                    const ifaceText = stats.iface ? stats.iface : "<unknown>"
+                    console.log(`Received initial loggable message for interface ${ifaceText}; starting publish interval`)
                     console.log("elapsedRx,elapsedTx")
 
-                    setInterval(function() {
-                        console.log(`${lastRx - startRx},${lastTx - startTx}`)
-                        startRx = lastRx
-                        startTx = lastTx
-                    }, pubInterval)
+                    if (pubInterval != 0) {
+                        setInterval(function() {
+                            console.log(`${lastRx - startRx},${lastTx - startTx}`)
+                            startRx = lastRx
+                            startTx = lastTx
+                        }, pubInterval)
+                    }
+                } else if (pubInterval == 0) {
+                    console.log(`${lastRx - startRx},${lastTx - startTx}`)
+                    startRx = lastRx
+                    startTx = lastTx
                 }
             })
         }
