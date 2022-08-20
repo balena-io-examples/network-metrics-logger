@@ -69,9 +69,10 @@ async function start() {
                     startTx = lastTx
                     const iface = stats.iface ? stats.iface : "(not provided)"
                     console.log(`Received initial loggable message for interface ${iface}; starting publish interval`)
+                    console.log("elapsedRx,elapsedTx")
 
                     setInterval(function() {
-                        console.log(`elapsedRx: ${lastRx - startRx}, elapsedTx: ${lastTx - startTx}`)
+                        console.log(`${lastRx - startRx},${lastTx - startTx}`)
                         startRx = lastRx
                         startTx = lastTx
                     }, pubInterval)
