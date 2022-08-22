@@ -21,7 +21,7 @@ services:
         - "mqtt"
   mqtt:
     image: eclipse-mosquitto:1.6.15
-    restart: unless-stopped
+    restart: always
     # need host exposure for sensor service, but limit to just this host for security
     ports:
       - 127.0.0.1:1883:1883
