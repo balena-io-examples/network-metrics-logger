@@ -10,12 +10,13 @@ Simply click on the *Deploy with balena* button below to create a fleet from the
 
 [![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/balena-io-examples/network-metrics-logger)
 
-By default the fleet publishes bytes transmitted and received every five minutes on the first interface received from the System Metrics block. You should see messages like below.
+By default the fleet publishes bytes transmitted and received every five minutes on the first interface received from the System Metrics block. Output is formatted as CSV. You should see messages like below.
 
 ```
 11.07.22 12:54:36 (+0000)  network-metrics-logger  Received initial loggable message for interface lo; starting publish interval
-11.07.22 12:59:36 (+0000)  network-metrics-logger  elapsedRx: 40976, elapsedTx: 40976
-11.07.22 13:04:36 (+0000)  network-metrics-logger  elapsedRx: 42868, elapsedTx: 42868
+11.07.22 12:59:36 (+0000)  network-metrics-logger  elapsedRx,elapsedTx
+11.07.22 12:59:36 (+0000)  network-metrics-logger  40976,40976
+11.07.22 13:04:36 (+0000)  network-metrics-logger  42868,42868
 ```
 Notice the first message includes the name of the interface, in this case the loopback interface `lo`. See METRICS_REQUEST configuration below to specify a different interface.
 
@@ -24,13 +25,13 @@ Environment variables you may configure are listed in the sections below.
 
 ### METRICS_REQUEST
 
-The METRICS_REQUEST variable is [defined](https://github.com/balena-io-examples/system-metrics#metrics_request) by the System Metrics block to collect network I/O readings. The fleet collects metrics on **all** interfaces by default to help you get started, as you can see in the first term of the request text below.
+The METRICS_REQUEST variable is [defined](https://github.com/balena-io-examples/system-metrics#metrics_request) by the System Metrics block to collect network I/O readings. The fleet collects metrics on **all** interfaces by default to help you get started, as you can see by the asterisk (*) in the first term of the request text below.
 
 ```
 networkStats/(*), networkStats/iface, networkStats/rx_bytes, networkStats/tx_bytes
 ```
 
-However, the network metrics logger container only reports data from the **first** interface it receives from System Metrics. Often this interface is `lo`, the loopback interface, which probably is not what you want.
+However, the network metrics logger service only reports data from the **first** interface it receives from System Metrics. Often this interface is `lo`, the loopback interface, which probably is not what you want.
 
 So create/update a `METRICS_REQUEST` environment variable with the single interface of interest. For example, if you are interested in interface `eth0`, set METRICS_REQUEST like below.
 
@@ -55,6 +56,8 @@ vethe6eb4c6      ethernet  unmanaged    --
 lo               loopback  unmanaged    --
 ```
 
-### PUBLISH_INTERVAL_SEC
+### READING_INTERVAL_SEC
 
-Interval between publishing metrics, in seconds. Allows accumulating byte totals for a period longer than the interval between incoming metrics messages.  Defaults to `0`, which publishes totals as messages received. So, if metrics messages are received every 10 seconds and PUBLISH_INTERVAL_SEC is 30, accumulates byte totals over 3 incoming messages before publishing.
+The READING_INTERVAL_SEC variable is [defined](https://github.com/balena-io-examples/system-metrics#reading_interval_sec) by the System Metrics block as the interval between metrics readings, in seconds. The logger service receives these raw readings from MQTT, accumulates totals and logs them. The default interval for a fleet is 300 seconds or 5 minutes.
+
+The logger service itself also provides a `PUBLISH_INTERVAL_SEC` variable to allow accumulating byte totals across readings from the metrics block before publishing them to the system log. Defaults to `0`, which publishes totals as readings are received.
