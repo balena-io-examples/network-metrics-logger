@@ -16,7 +16,7 @@ services:
     environment:
       MQTT_ADDRESS: '127.0.0.1'
       METRICS_REQUEST: 'networkStats/(*), networkStats/iface, networkStats/rx_bytes, networkStats/tx_bytes'
-      READING_INTERVAL_MS: '300000'
+      READING_INTERVAL_SEC: '300'
     depends_on:
         - "mqtt"
   mqtt:
