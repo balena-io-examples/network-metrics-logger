@@ -1,6 +1,6 @@
 {
   "name": "network-metrics-logger",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Log metrics on network I/O",
   "main": "index.js",
   "type": "module",
@@ -23,6 +23,6 @@
   },
   "homepage": "https://github.com/balena-io-examples/network-metrics-logger",
   "versionist": {
-    "publishedAt": "2022-08-22T22:21:01.772Z"
+    "publishedAt": "2022-08-23T11:45:24.450Z"
   }
 }
