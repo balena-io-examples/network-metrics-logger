@@ -39,22 +39,50 @@ So create/update a `METRICS_REQUEST` environment variable with the single interf
 networkStats/(eth0), networkStats/rx_bytes, networkStats/tx_bytes
 ```
 
-If you don't know the name of the interface, use Network Manager to find it. In the example below, `eth0` is provided in the DEVICE column value for the wired Ethernet interface.
+If you don't know the name of the interface, use the `ifconfig` command to find it. The example below includes an Ethernet interface, `eth0`, and a cellular interface, `wwp1s0u1u1i4`.
+
+<details><summary>Click for ifconfig command example</summary>
+<p>
 
 ```
-$ nmcli d
-DEVICE           TYPE      STATE        CONNECTION
-eth0             ethernet  connected    Wired connection 1
-br-e9a3932238a8  bridge    connected    br-e9a3932238a8
-docker0          bridge    connected    docker0
-br-0147258db07c  bridge    connected    br-0147258db07c
-br-8c8071c3a98b  bridge    connected    br-8c8071c3a98b
-br-c70b93f11882  bridge    connected    br-c70b93f11882
-br-c7cdab3a8866  bridge    connected    br-c7cdab3a8866
-wlp0s20f3        wifi      unavailable  --
-vethe6eb4c6      ethernet  unmanaged    --
-lo               loopback  unmanaged    --
+root@abcdef0:~# ifconfig |grep -B 1 inet
+
+balena0   Link encap:Ethernet  HWaddr 02:42:83:5E:26:AC  
+          inet addr:10.114.101.1  Bcast:10.114.101.255  Mask:255.255.255.0
+--
+br-233ab2d0cdb1 Link encap:Ethernet  HWaddr 02:42:DE:0E:DC:2A  
+          inet addr:172.17.0.1  Bcast:172.17.255.255  Mask:255.255.0.0
+          inet6 addr: fe80::42:deff:fe0e:dc2a/64 Scope:Link
+--
+eth0      Link encap:Ethernet  HWaddr DC:A6:32:E8:C9:56  
+          inet addr:192.168.1.127  Bcast:192.168.1.255  Mask:255.255.255.0
+          inet6 addr: fe80::aa2f:7f31:b094:9181/64 Scope:Link
+          inet6 addr: fd25:36da:e8ec::e1d/128 Scope:Global
+          inet6 addr: fd25:36da:e8ec:0:99aa:a2bd:39d5:f53f/64 Scope:Global
+--
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+--
+resin-dns Link encap:Ethernet  HWaddr 2E:ED:31:EB:05:35  
+          inet addr:10.114.102.1  Bcast:0.0.0.0  Mask:255.255.255.0
+--
+resin-vpn Link encap:UNSPEC  HWaddr 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00  
+          inet addr:10.246.34.90  P-t-P:52.4.252.97  Mask:255.255.255.255
+          inet6 addr: fe80::a238:945a:e93b:c106/64 Scope:Link
+--
+supervisor0 Link encap:Ethernet  HWaddr 02:42:58:E8:D0:F7  
+          inet addr:10.114.104.1  Bcast:10.114.104.127  Mask:255.255.255.128
+--
+veth43d6399 Link encap:Ethernet  HWaddr AA:CC:21:F4:A0:E6  
+          inet6 addr: fe80::a8cc:21ff:fef4:a0e6/64 Scope:Link
+--
+wwp1s0u1u1i4 Link encap:UNSPEC  HWaddr 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00  
+          inet addr:100.56.81.95  P-t-P:100.65.50.81  Mask:255.255.255.252
 ```
+
+</p>
+</details>
 
 ### READING_INTERVAL_SEC
 
